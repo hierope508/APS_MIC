@@ -1,4 +1,4 @@
-/*
+/*cxvv    x
 
   This example code is in the public domain.
 
@@ -6,10 +6,6 @@
 */
 
 // this constant won't change:
-//Times
-const int  t1 = 15000;
-const int  t2 = 30000;
-const int  t3 = 60000;
 
 //Buttons
 const int  buttonPin1 = 2;    // the pin that the button led1 is attached to
@@ -17,70 +13,49 @@ const int  buttonPin2 = 3;    // the pin that the button led2 is attached to
 const int  buttonPin3 = 4;    // the pin that the button led3 is attached to
 const int  buttonPin4 = 5;    // the pin that the button led4 is attached to
 
-const int  buttonPin5 = A0;    // the pin that the button led3 is attached to
-const int  buttonPin6 = A1;    // the pin that the button led4 is attached to
+const int  buttonPin5 = 6;    // the pin that the button led3 is attached to
+const int  buttonPin6 = 7;    // the pin that the button led4 is attached to
 
 //Leds
-const int ledPin1 = 6;       // the pin that the LED1 is attached to
-const int ledPin2 = 7;       // the pin that the LED2 is attached to
-const int ledPin3 = 8;       // the pin that the LED3 is attached to
-const int ledPin4 = 9;       // the pin that the LED4 is attached to
+const int ledPin1 = 8;       // the pin that the LED1 is attached to
+const int ledPin2 = 9;       // the pin that the LED2 is attached to
+const int ledPin3 = 10;       // the pin that the LED3 is attached to
+const int ledPin4 = 11;       // the pin that the LED4 is attached to
 
-const int lightPin1 = 13;       // the pin that the Light1 is attached to
-const int lightPin2 = 14;       // the pin that the Light2 is attached to
-
-//Temps
-const int temp1Pin = 10;       // the pin that temp1 is attached to
-const int temp2Pin = 11;       // the pin that temp2 is attached to
-const int temp3Pin = 12;       // the pin that temp3 is attached to
-
+const int lightPin1 = 12;       // the pin that the Light1 is attached to
+const int lightPin2 = 13;       // the pin that the Light2 is attached to
 
 // Variables will change:
 //L1
 int bt1State = 0;         // current state of the button
 int nextL1State = 0;     // next state of the button
 int currentL1State = 0; //current led state
-long L1TurnedOnAt = 0;
-int L1currentTime = 0;
 
 //L2
 int bt2State = 0;         // current state of the button
 int nextL2State = 0;     // next state of the button
 int currentL2State = 0; //current led state
-long L2TurnedOnAt = 0;
-int L2currentTime = 0;
 
 //L3
 int bt3State = 0;         // current state of the button
 int nextL3State = 0;     // next state of the button
 int currentL3State = 0; //current led state
-long L3TurnedOnAt = 0;
-int L3currentTime = 0;
 
 //L4
 int bt4State = 0;         // current state of the button
 int nextL4State = 0;     // next state of the button
 int currentL4State = 0; //current led state
-long L4TurnedOnAt = 0;
-int L4currentTime = 0;
 
 //Light1
 int bt5State = 0;         // current state of the button
 int nextL5State = 0;     // next state of the button
 int currentL5State = 0; //current led state
-long L5TurnedOnAt = 0;
-int L5currentTime = 0;
 
 //Light2
 int bt6State = 0;         // current state of the button
 int nextL6State = 0;     // next state of the button
 int currentL6State = 0; //current led state
-long L6TurnedOnAt = 0;
-int L6currentTime = 0;
 
-int btTemp1 = 0;
-int btTemp2 = 0;
-int btTemp3 = 0;
 
 void setup() {
   // initialize the button pin as a input:
@@ -90,11 +65,6 @@ void setup() {
   pinMode(buttonPin4, INPUT);
   pinMode(buttonPin5, INPUT);
   pinMode(buttonPin6, INPUT);
-
-  // initialize the temp as an input:
-  pinMode(temp1Pin, INPUT);
-  pinMode(temp2Pin, INPUT);
-  pinMode(temp3Pin, INPUT);
   
   // initialize the LED as an output:
   pinMode(ledPin1, OUTPUT);
@@ -105,260 +75,315 @@ void setup() {
   // initialize the Lights as an output:
   pinMode(lightPin1, OUTPUT);
   pinMode(lightPin2, OUTPUT);
+
+  pinMode(0, OUTPUT);
+  pinMode(1, OUTPUT);
+  pinMode(A0, OUTPUT);
+  pinMode(A1, OUTPUT);
+  pinMode(A2, OUTPUT);
+  pinMode(A3, OUTPUT);
+  pinMode(A4, OUTPUT);
+
+
   
-  // initialize serial communication:
-  Serial.begin(9600);
+  // initialize serial commundication:
+  //Serial.begin(9600);
+
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+  digitalWrite(lightPin1, LOW);
+  digitalWrite(lightPin2, LOW);
 }
 
+byte seven_seg_digits[16][7] = { 
+ { 1,1,1,1,1,1,0 },  //DIGITO 0
+ { 0,1,1,0,0,0,0 },  //DIGITO 1
+ { 1,1,0,1,1,0,1 },  //DIGITO 2
+ { 1,1,1,1,0,0,1 },  //DIGITO 3
+ { 0,1,1,0,0,1,1 },  //DIGITO 4
+ { 1,0,1,1,0,1,1 },  //DIGITO 5
+ { 1,0,1,1,1,1,1 },  //DIGITO 6
+ { 1,1,1,0,0,0,0 },  //DIGITO 7
+ { 1,1,1,1,1,1,1 },  //DIGITO 8
+ { 1,1,1,0,0,1,1 },  //DIGITO 9
+ { 1,1,1,0,1,1,1 },  //DIGITO A
+ { 0,0,1,1,1,1,1 },  //DIGITO B
+ { 1,0,0,1,1,1,0 },  //DIGITO C
+ { 0,1,1,1,1,0,1 },  //DIGITO D
+ { 1,0,0,1,1,1,1 },  //DIGITO E
+ { 1,0,0,0,1,1,1 }   //DIGITO F
+};
+
+int pinos[] = {0,1,A0,A1,A2,A3,A4};
+
+void ligaSegmentosDisplay(byte digit){ //FUNÇÃO QUE ACIONA O DISPLAY
+ int i = 0;
+ for (byte contadorSegmentos = 0; contadorSegmentos < 7; ++contadorSegmentos){ //PARA "contadorSegmentos"
+      //IGUAL A 0, ENQUANTO "contadorSegmentos" MENOR QUE 7, INCREMENTA "contadorSegmentos"
+        digitalWrite(pinos[i], seven_seg_digits[digit][contadorSegmentos]); //PERCORRE O ARRAY E LIGA OS  
+        i++;
+    }
+}
 
 void loop() {
+  
   // read pushbutton's input's pin:
   bt1State = digitalRead(buttonPin1);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
+  if(bt1State){
+    delay(250);
+    bt1State = digitalRead(buttonPin1);
+    if(bt1State){
+      Temp1();
+      return;
+    }
+    bt1State = HIGH;
+  }
+  
 
   bt2State = digitalRead(buttonPin2);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
-
+  if(bt2State){
+    delay(250);
+    bt2State = digitalRead(buttonPin2);
+    if(bt2State){
+      Temp2();
+      return;
+    }
+    bt2State = HIGH;
+  }
+  
   bt3State = digitalRead(buttonPin3);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
-
+  if(bt3State){
+    delay(250);
+    bt3State = digitalRead(buttonPin3);
+    if(bt3State){
+      Temp3();
+      return;
+    }
+      bt3State = HIGH;
+  }
+  
   bt4State = digitalRead(buttonPin4);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
-
+  delay(100);
   bt5State = digitalRead(buttonPin5);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
-
+  delay(100);
   bt6State = digitalRead(buttonPin6);
-  delay(50);
-  btTemp1 = digitalRead(temp1Pin);
-  btTemp2 = digitalRead(temp2Pin);
-  btTemp3 = digitalRead(temp3Pin);
+  delay(100);
   
   // L1
   if (bt1State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL1State){
         nextL1State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL1State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(ledPin1, nextL1State);
-      
-      if(btTemp1){
-        L1TurnedOnAt = millis();
-        L1currentTime = t1;
-      }
-
-      if(btTemp2){
-        L1TurnedOnAt = millis();
-        L1currentTime = t2;
-      }
-
-      if(btTemp3){
-        L1TurnedOnAt = millis();
-        L1currentTime = t3;
-      }
-      
       currentL1State = nextL1State;
+      ligaSegmentosDisplay(1);
   }
 
   //L2
   if (bt2State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL2State){
         nextL2State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL2State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(ledPin2, nextL2State);
-      
-      if(btTemp1){
-        L2TurnedOnAt = millis();
-        L2currentTime = t1;
-      }
-
-      if(btTemp2){
-        L2TurnedOnAt = millis();
-        L2currentTime = t2;
-      }
-
-      if(btTemp3){
-        L2TurnedOnAt = millis();
-        L2currentTime = t3;
-      }
-      
-      currentL2State = nextL2State;
+     currentL2State = nextL2State;
+     ligaSegmentosDisplay(2);
   }
 
   //L3
   if (bt3State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL3State){
         nextL3State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL3State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(ledPin3, nextL3State);
-      
-      if(btTemp1){
-        L3TurnedOnAt = millis();
-        L3currentTime = t1;
-      }
-
-      if(btTemp2){
-        L3TurnedOnAt = millis();
-        L3currentTime = t2;
-      }
-
-      if(btTemp3){
-        L3TurnedOnAt = millis();
-        L3currentTime = t3;
-      }
-      
       currentL3State = nextL3State;
+      ligaSegmentosDisplay(3);
   }
 
   //L4
   if (bt4State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL4State){
         nextL4State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL4State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(ledPin4, nextL4State);
-      
-      if(btTemp1){
-        L4TurnedOnAt = millis();
-        L4currentTime = t1;
-      }
-
-      if(btTemp2){
-        L4TurnedOnAt = millis();
-        L4currentTime = t2;
-      }
-
-      if(btTemp3){
-        L4TurnedOnAt = millis();
-        L4currentTime = t3;
-      }
-      
       currentL4State = nextL4State;
+      ligaSegmentosDisplay(4);
   }
 
   //L5
   if (bt5State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL5State){
         nextL5State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL5State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(lightPin1, nextL5State);
-      
-      if(btTemp1){
-        L5TurnedOnAt = millis();
-        L5currentTime = t1;
-      }
-
-      if(btTemp2){
-        L5TurnedOnAt = millis();
-        L5currentTime = t2;
-      }
-
-      if(btTemp3){
-        L5TurnedOnAt = millis();
-        L5currentTime = t3;
-      }
-      
       currentL5State = nextL5State;
+      ligaSegmentosDisplay(5);
   }
 
   //L6
   if (bt6State) {
-      Serial.println("Li o botão");
+      //Serial.println("Li o botão");
       if(currentL6State){
         nextL6State = 0;
-        Serial.println("Li o vai desligar");
+        //Serial.println("Li o vai desligar");
       }else{
         nextL6State = 1 ;
-        Serial.println("Li o vai ligar");
+        //Serial.println("Li o vai ligar");
       }
       digitalWrite(lightPin2, nextL6State);
-      
-      if(btTemp1){
-        L6TurnedOnAt = millis();
-        L6currentTime = t1;
-      }
-
-      if(btTemp2){
-        L6TurnedOnAt = millis();
-        L6currentTime = t2;
-      }
-
-      if(btTemp3){
-        L6TurnedOnAt = millis();
-        L6currentTime = t3;
-      }
-      
       currentL6State = nextL6State;
+      ligaSegmentosDisplay(6);
   }
 
-
-  checkTemp(ledPin1,&L1currentTime, &L1TurnedOnAt, currentL1State);
-  checkTemp(ledPin2,&L2currentTime, &L2TurnedOnAt, currentL2State);
-  checkTemp(ledPin3,&L3currentTime, &L3TurnedOnAt, currentL3State);
-  checkTemp(ledPin4,&L4currentTime, &L4TurnedOnAt, currentL4State);
-  checkTemp(lightPin1,&L5currentTime, &L5TurnedOnAt, currentL5State);
-  checkTemp(lightPin2,&L6currentTime, &L6TurnedOnAt, currentL6State);
-  
   //delay(120);
   //lastButtonState = buttonState;
   
 }
 
-void checkTemp(int pin, int *time, long *ledTurnedOnAt, int state){
-  
-  //Serial.println((*time));
-  
-  if((*time)>0){
-    if((millis() -((*ledTurnedOnAt)) ) > (*time)){
-      digitalWrite(pin, !state);
-      *time = 0;
-      *ledTurnedOnAt= 0;
+void Temp1(){
+  ligaSegmentosDisplay(10);
+  //Serial.println("TEMP1");
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+  digitalWrite(lightPin1, LOW);
+  digitalWrite(lightPin2, LOW);
 
-      switch(pin){
-        case 6:
-          currentL1State = 0;
-          break;
-        default:
-          break; 
-      }
-    }
+  digitalWrite(ledPin1, HIGH);
+  digitalWrite(ledPin2, HIGH);
+  digitalWrite(ledPin3, HIGH);
+  digitalWrite(ledPin4, HIGH);
+  digitalWrite(lightPin1, HIGH);
+  digitalWrite(lightPin2, HIGH);
+  delay(3000);  
+
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+  digitalWrite(lightPin1, LOW);
+  digitalWrite(lightPin2, LOW);
+
+  currentL1State = 0;
+  currentL2State = 0;
+  currentL3State = 0;
+  currentL4State = 0;
+  currentL5State = 0;
+  currentL6State = 0;
+}
+
+void Temp2(){
+  ligaSegmentosDisplay(11);
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+  digitalWrite(lightPin1, LOW);
+  digitalWrite(lightPin2, LOW);
+
+  int i = 0;
+  while (i<3){
+    digitalWrite(ledPin1, HIGH);
+    delay(500);
+    digitalWrite(ledPin1, LOW);
+
+    digitalWrite(ledPin2, HIGH);
+    delay(500);
+    digitalWrite(ledPin2, LOW);
+
+    digitalWrite(ledPin3, HIGH);
+    delay(500);
+    digitalWrite(ledPin3, LOW);
+
+    digitalWrite(ledPin4, HIGH);
+    delay(500);
+    digitalWrite(ledPin4, LOW);
+    
+    digitalWrite(lightPin1, HIGH);
+    delay(500);
+    digitalWrite(lightPin1, LOW);
+    
+    digitalWrite(lightPin2, HIGH);
+    delay(500);
+    digitalWrite(lightPin2, LOW);
+    
+    i = i + 1;
   }
+
+  
+  currentL1State = 0;
+  currentL2State = 0;
+  currentL3State = 0;
+  currentL4State = 0;
+  currentL5State = 0;
+  currentL6State = 0;
+ 
+}
+
+
+void Temp3(){
+  ligaSegmentosDisplay(12);
+  digitalWrite(ledPin1, LOW);
+  digitalWrite(ledPin2, LOW);
+  digitalWrite(ledPin3, LOW);
+  digitalWrite(ledPin4, LOW);
+  digitalWrite(lightPin1, LOW);
+  digitalWrite(lightPin2, LOW);
+
+  int i = 0;
+  while (i<3){
+    digitalWrite(ledPin1, HIGH);
+    digitalWrite(ledPin2, HIGH);
+    delay(500);
+    digitalWrite(ledPin1, LOW);
+    digitalWrite(ledPin2, LOW);
+    
+    digitalWrite(ledPin3, HIGH);
+    digitalWrite(ledPin4, HIGH);
+    delay(500);
+    digitalWrite(ledPin3, LOW);
+    digitalWrite(ledPin4, LOW);
+
+    digitalWrite(lightPin1, HIGH);
+    digitalWrite(lightPin2, HIGH);
+    delay(500);
+    digitalWrite(lightPin1, LOW);
+    digitalWrite(lightPin2, LOW);
+    
+    i = i + 1;
+  }
+ 
+  currentL1State = 0;
+  currentL2State = 0;
+  currentL3State = 0;
+  currentL4State = 0;
+  currentL5State = 0;
+  currentL6State = 0;
 }
